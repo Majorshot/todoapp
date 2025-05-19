@@ -7,6 +7,7 @@ import {
   X,
   Save,
   AlertCircle,
+  RotateCcw,
 } from "lucide-react";
 
 export default function TodoApp() {
@@ -67,15 +68,9 @@ export default function TodoApp() {
   };
 
   const handleToggleComplete = (id) => {
-    // If task is already completed, remove it
     const task = todos.find((todo) => todo.id === id);
-    if (task && task.completed) {
-      // Remove the task with animation
-      handleDelete(id);
-      return;
-    }
-
-    // Otherwise mark as completed with animation
+    
+    // Mark as completing with animation
     setTodos(
       todos.map((todo) =>
         todo.id === id ? { ...todo, completing: true } : todo
@@ -87,7 +82,7 @@ export default function TodoApp() {
       setTodos((currentTodos) =>
         currentTodos.map((todo) =>
           todo.id === id
-            ? { ...todo, completed: true, completing: false }
+            ? { ...todo, completed: !todo.completed, completing: false }
             : todo
         )
       );
@@ -253,23 +248,30 @@ export default function TodoApp() {
                         >
                           <Edit size={16} className="mr-1" /> Edit
                         </button>
+                        
+                        {/* Show Remove button for all tasks */}
                         <button
                           onClick={() => handleDelete(todo.id)}
                           className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 flex items-center transition-all duration-200 hover:shadow-md transform hover:scale-105 active:scale-95 text-sm md:text-base"
                         >
                           <Trash size={16} className="mr-1" /> Remove
                         </button>
-                        <button
-                          onClick={() => handleToggleComplete(todo.id)}
-                          className={`p-2 rounded-lg flex items-center ${
-                            todo.completed
-                              ? "bg-green-500 hover:bg-green-600"
-                              : "bg-gray-500 hover:bg-gray-600"
-                          } text-white transition-all duration-200 hover:shadow-md transform hover:scale-105 active:scale-95 text-sm md:text-base`}
-                        >
-                          <CheckCircle size={16} className="mr-1" />{" "}
-                          {todo.completed ? "Remove" : "Done"}
-                        </button>
+                        
+                        {todo.completed ? (
+                          <button
+                            onClick={() => handleToggleComplete(todo.id)}
+                            className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 flex items-center transition-all duration-200 hover:shadow-md transform hover:scale-105 active:scale-95 text-sm md:text-base"
+                          >
+                            <RotateCcw size={16} className="mr-1" /> Undo
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleToggleComplete(todo.id)}
+                            className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg flex items-center transition-all duration-200 hover:shadow-md transform hover:scale-105 active:scale-95 text-sm md:text-base"
+                          >
+                            <CheckCircle size={16} className="mr-1" /> Done
+                          </button>
+                        )}
                       </div>
                     </div>
                   )}
